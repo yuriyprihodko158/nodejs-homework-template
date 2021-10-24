@@ -17,11 +17,11 @@ const listContacts = async (req, res) => {
 };
 
 const getContactById = async (req, res) => {
-  const { contactId } = req.params;
+  const { id } = req.params;
   const { _id } = req.user;
-  const contact = await Contact.findOne({ owner: _id, _id: contactId }, '_id name email phone favorite').populate('owner', 'email');
+  const contact = await Contact.findOne({ owner: _id, _id: id }, '_id name email phone favorite').populate('owner', 'email');
   if (!contact) {
-    throw new NotFound(`Product with id ${contactId} not found`)
+    throw new NotFound(`Contact with id ${id} not found`)
   }
   res.json({
     status: 'success',
@@ -43,11 +43,11 @@ const addContact = async (req, res) => {
 };
 
 const removeContact = async (req, res) => {
-  const { contactId } = req.params;
+  const {id} = req.params;
   const { _id } = req.user;
-  const result = await Contact.findOneAndRemove({ owner: _id, _id: contactId });
+  const result = await Contact.findOneAndRemove({ owner: _id, _id: id });
   if (!result) {
-    throw new NotFound(`Product with id ${contactId} not found`)
+    throw new NotFound(`Product with id ${id} not found`)
   }
   res.json({
     status: 'success',
@@ -57,11 +57,11 @@ const removeContact = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  const { contactId } = req.params;
+  const { id } = req.params;
   const { _id } = req.user;
-  const result = await Contact.findOneAndUpdate({ owner: _id, _id: contactId }, req.body, { new: true });
+  const result = await Contact.findOneAndUpdate({ owner: _id, _id: id }, req.body, { new: true });
   if (!result) {
-    throw new NotFound(`Product with id ${contactId} not found`)
+    throw new NotFound(`Product with id ${id} not found`)
   }
   res.json({
     status: 'success',
@@ -73,16 +73,16 @@ const updateById = async (req, res) => {
 };
 
 const updateStatusContact = async (req, res) => {
-  const { contactId } = req.params;
+  const { id } = req.params;
   const { favorite } = req.body;
   const { _id } = req.user;
 
   if (typeof favorite === 'undefined') {
     throw new BadRequest('missing field favorite');
   }
-  const result = await Contact.findOneAndUpdate({ owner: _id, _id: contactId }, { favorite }, { new: true });
+  const result = await Contact.findOneAndUpdate({ owner: _id, _id: id }, { favorite }, { new: true });
   if (!result) {
-    throw new NotFound(`Product with id ${contactId} not found`)
+    throw new NotFound(`Contact with id ${id} not found`)
   }
   res.json({
     status: 'success',
