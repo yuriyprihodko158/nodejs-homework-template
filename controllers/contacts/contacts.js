@@ -1,8 +1,8 @@
 const { NotFound, BadRequest } = require('http-errors');
-const { Contact } = require('../../models/contacts/contact');
-require('dotenv').config();
 
-const listContacts = async (req, res) => {
+const { Contact } = require('../../models/contacts/contact');
+
+const listContacts = async (reg, res) => {
   const { page = 1, limit = 4, favorite } = req.query;
   const skip = (page - 1) * limit;
   const { _id } = req.user;
@@ -21,7 +21,7 @@ const getContactById = async (req, res) => {
   const { _id } = req.user;
   const contact = await Contact.findOne({ owner: _id, _id: id }, '_id name email phone favorite').populate('owner', 'email');
   if (!contact) {
-    throw new NotFound(`Contact with id ${id} not found`)
+    throw new NotFound(`Product with id ${id} not found`)
   }
   res.json({
     status: 'success',
@@ -43,7 +43,7 @@ const addContact = async (req, res) => {
 };
 
 const removeContact = async (req, res) => {
-  const {id} = req.params;
+ const { id } = req.params;
   const { _id } = req.user;
   const result = await Contact.findOneAndRemove({ owner: _id, _id: id });
   if (!result) {
@@ -57,7 +57,7 @@ const removeContact = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  const { id } = req.params;
+const { id } = req.params;
   const { _id } = req.user;
   const result = await Contact.findOneAndUpdate({ owner: _id, _id: id }, req.body, { new: true });
   if (!result) {
@@ -82,7 +82,7 @@ const updateStatusContact = async (req, res) => {
   }
   const result = await Contact.findOneAndUpdate({ owner: _id, _id: id }, { favorite }, { new: true });
   if (!result) {
-    throw new NotFound(`Contact with id ${id} not found`)
+    throw new NotFound(`Product with id ${id} not found`)
   }
   res.json({
     status: 'success',
@@ -92,6 +92,7 @@ const updateStatusContact = async (req, res) => {
     }
   });
 };
+
 
 module.exports = {
   listContacts,
